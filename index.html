@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Возвеличення Найсвятішої Крови Господа нашого Ісуса Христа</title>
+
+    <!-- Google Fonts: Cormorant Garamond, Cinzel, and Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-primary: #0a0304;
+            --bg-secondary: #140507;
+            --card-bg: rgba(22, 7, 9, 0.85);
+            --text-primary: #f8f3eb;
+            --text-secondary: #dcd0bf;
+            --accent-gold: #d4af37;
+            --accent-gold-bright: #ffd700;
+            --accent-blood: #8b0000;
+            --accent-crimson: #a71d2a;
+            --border-gold: rgba(212, 175, 55, 0.35);
+            --border-gold-glow: rgba(212, 175, 55, 0.7);
+            --transition-speed: 0.3s;
+        }
+
+        /* RESET & BASE STYLES */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 21px;
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* CANVAS FOR ANIMATED BLOOD DROPS */
+        #bloodCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* HEADER & NAVIGATION */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 3, 4, 0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-gold);
+            z-index: 1000;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .header-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 25px;
+        }
+
+        .logo-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 1px;
+        }
+
+        .logo-title i {
+            color: var(--accent-crimson);
+            font-size: 1.3rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color var(--transition-speed);
+            padding: 5px 0;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 1px;
+            background-color: var(--accent-gold);
+            transition: width var(--transition-speed);
+        }
+
+        nav a:hover {
+            color: var(--accent-gold);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-prayer-mode {
+            background: linear-gradient(135deg, #4a0000, #8b0000);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+            padding: 8px 16px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition-speed);
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+        }
+
+        .btn-prayer-mode:hover {
+            background: linear-gradient(135deg, #8b0000, #a71d2a);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
+        }
+
+        /* MAIN CONTAINER */
+        main {
+            position: relative;
+            z-index: 10;
+            padding-top: 80px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* HERO SECTION */
+        .hero-section {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.8rem;
+            color: var(--accent-gold);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.4), 0 0 35px rgba(139, 0, 0, 0.7);
+            margin-bottom: 15px;
+            line-height: 1.2;
+            letter-spacing: 2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 35px;
+            max-width: 800px;
+        }
+
+        /* CRUCIFIX IMAGE CONTAINER */
+        .crucifix-frame {
+            position: relative;
+            max-width: 450px;
+            width: 100%;
+            border-radius: 12px;
+            padding: 10px;
+            background: linear-gradient(145deg, rgba(212, 175, 55, 0.3), rgba(139, 0, 0, 0.2));
+            box-shadow: 0 0 35px rgba(139, 0, 0, 0.8), inset 0 0 20px rgba(212, 175, 55, 0.2);
+            border: 1px solid var(--accent-gold);
+            margin-bottom: 40px;
+            animation: haloPulse 4s infinite alternate ease-in-out;
+        }
+
+        @keyframes haloPulse {
+            0% {
+                box-shadow: 0 0 25px rgba(139, 0, 0, 0.7), inset 0 0 15px rgba(212, 175, 55, 0.2);
+            }
+            100% {
+                box-shadow: 0 0 50px rgba(212, 175, 55, 0.5), 0 0 80px rgba(139, 0, 0, 0.9), inset 0 0 25px rgba(212, 175, 55, 0.4);
+            }
+        }
+
+        .crucifix-img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+            filter: contrast(1.05) brightness(0.95);
+        }
+
+        .scroll-down-btn {
+            color: var(--accent-gold);
+            font-size: 2rem;
+            text-decoration: none;
+            animation: bounce 2s infinite;
+            margin-top: 10px;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* PRAYER SECTION CARDS */
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-gold);
+            border-radius: 12px;
+            padding: 45px;
+            margin: 60px 0;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(139, 0, 0, 0.2);
+            position: relative;
+            transition: border-color var(--transition-speed), transform var(--transition-speed);
+        }
+
+        .section-card:hover {
+            border-color: var(--border-gold-glow);
+        }
+
+        .section-card::before {
+            content: '✝';
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-primary);
+            color: var(--accent-gold);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 35px;
+            border-bottom: 1px dashed var(--border-gold);
+            padding-bottom: 20px;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--accent-crimson);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* PRAYER TEXT CONTENT STYLING */
+        .prayer-text {
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            line-height: 1.8;
+            text-align: justify;
+        }
+
+        .prayer-text p {
+            margin-bottom: 20px;
+            text-indent: 25px;
+        }
+
+        .litany-group {
+            margin: 25px 0;
+            padding-left: 15px;
+            border-left: 2px solid var(--accent-crimson);
+        }
+
+        .litany-item {
+            margin-bottom: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 5px;
+        }
+
+        .litany-call {
+            color: var(--text-primary);
+        }
+
+        .litany-response {
+            color: var(--accent-gold);
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        .instruction-box {
+            background: rgba(139, 0, 0, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin: 30px 0;
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+        }
+
+        .instruction-box strong {
+            color: var(--accent-gold);
+        }
+
+        /* DYNAMIC NAME INPUT FOR CONSECRATION */
+        .name-input-wrapper {
+            background: rgba(10, 3, 4, 0.7);
+            border: 1px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .name-input-wrapper label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .name-input {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(20, 5, 7, 0.9);
+            border: 1px solid var(--border-gold);
+            color: var(--accent-gold-bright);
+            padding: 10px 15px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            text-align: center;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .name-input:focus {
+            border-color: var(--accent-gold-bright);
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+        }
+
+        .user-name-highlight {
+            color: var(--accent-gold-bright);
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        /* ROSARY / PRAYER COUNTER WIDGET */
+        .counter-widget {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 25px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 30px;
+            border: 1px solid var(--border-gold);
+        }
+
+        .counter-btn {
+            background: var(--accent-crimson);
+            color: var(--text-primary);
+            border: 1px solid var(--accent-gold);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--transition-speed);
+        }
+
+        .counter-btn:hover {
+            background: var(--accent-blood);
+        }
+
+        .counter-display {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            color: var(--accent-gold);
+            min-width: 120px;
+            text-align: center;
+        }
+
+        /* PRAYER MODE STYLING ADJUSTMENTS */
+        body.prayer-mode header {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        body.prayer-mode .section-card {
+            background: rgba(10, 3, 4, 0.98);
+            border-color: rgba(212, 175, 55, 0.2);
+            padding: 60px 30px;
+        }
+
+        body.prayer-mode .prayer-text {
+            font-size: 1.5rem;
+            line-height: 2;
+        }
+
+        /* PRAYER MODE EXIT BUTTON */
+        .btn-exit-prayer-mode {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--accent-gold);
+            color: var(--bg-primary);
+            border: none;
+            padding: 12px 24px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+            z-index: 2000;
+            display: none;
+        }
+
+        body.prayer-mode .btn-exit-prayer-mode {
+            display: block;
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid var(--border-gold);
+            background: #050102;
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        footer p {
+            margin-bottom: 10px;
+        }
+
+        .footer-gold {
+            color: var(--accent-gold);
+            font-family: 'Cinzel', serif;
+        }
+
+        /* RESPONSIVE DESIGN FOR MOBILE & TABLETS */
+        @media (max-width: 900px) {
+            nav {
+                display: none; /* Сховати додаткову навігацію для чистішого вигляду */
+            }
+
+            .header-container {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px 15px;
+            }
+
+            main {
+                padding-top: 100px;
+            }
+
+            .container {
+                padding: 0 12px;
+            }
+
+            .hero-section {
+                padding: 20px 0;
+                min-height: auto;
+            }
+
+            .hero-title {
+                font-size: 1.75rem;
+                letter-spacing: 1px;
+                margin-bottom: 10px;
+            }
+
+            .hero-subtitle {
+                font-size: 1.05rem;
+                margin-bottom: 25px;
+            }
+
+            .crucifix-frame {
+                max-width: 100%;
+                margin-bottom: 25px;
+            }
+
+            .section-card {
+                padding: 25px 15px;
+                margin: 30px 0;
+                border-radius: 8px;
+            }
+
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .section-subtitle {
+                font-size: 0.95rem;
+            }
+
+            .prayer-text {
+                font-size: 1.1rem;
+                line-height: 1.7;
+                text-align: left;
+            }
+
+            .prayer-text p {
+                text-indent: 15px;
+                margin-bottom: 15px;
+            }
+
+            .instruction-box {
+                padding: 15px;
+                font-size: 1rem;
+                margin: 20px 0;
+            }
+
+            .litany-group {
+                padding-left: 10px;
+                margin: 15px 0;
+            }
+
+            .litany-item {
+                margin-bottom: 8px;
+                font-size: 1.05rem;
+            }
+
+            .btn-exit-prayer-mode {
+                bottom: 15px;
+                right: 50%;
+                transform: translateX(50%);
+                width: 90%;
+                max-width: 300px;
+                text-align: center;
+                padding: 10px 16px;
+            }
+
+            body.prayer-mode .section-card {
+                padding: 30px 15px;
+            }
+
+            body.prayer-mode .prayer-text {
+                font-size: 1.25rem;
+                line-height: 1.8;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CANVAS FOR ANIMATED BLOOD DROPS -->
+    <canvas id="bloodCanvas"></canvas>
+
+    <!-- HEADER / NAVIGATION -->
+    <header id="mainHeader">
+        <div class="header-container">
+            <a href="#hero" class="logo-title">
+                <i class="fa-solid fa-cross"></i>
+                <span>Найсвятіша Кров</span>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#hero">Головна</a></li>
+                    <li><a href="#devotion">12-Річна Молитва</a></li>
+                    <li><a href="#consecration">Посвячення</a></li>
+                    <li><a href="#gertrude">св. Ґертруда</a></li>
+                    <li><a href="#golden-arrow">Золота Стріла</a></li>
+                    <li><a href="#shoulder-wound">Рана Рамена</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <button class="btn-prayer-mode" id="togglePrayerMode">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Режим Молитви</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <button class="btn-exit-prayer-mode" id="exitPrayerMode">
+        <i class="fa-solid fa-xmark"></i> Вийти з Режиму Молитви
+    </button>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <div class="container">
+
+            <!-- SECTION 1: HERO -->
+            <section id="hero" class="hero-section">
+                <h1 class="hero-title">Возвеличення Найсвятішої Крови Господа нашого Ісуса Христа</h1>
+                <p class="hero-subtitle">«Ти відкупив нас Господи Своєю Найсвятішою Кров'ю з кожного коліна, і мови, і народу, і племени»</p>
+                
+                <!-- CRUCIFIX IMAGE WITH HALO -->
+                <div class="crucifix-frame">
+                    <img src="Jesus.
+jpeg" alt="Ісус Христос на Хресті — Найсвятіша Кров" class="crucifix-img">
+                </div>
+
+                <a href="#devotion" class="scroll-down-btn" title="Перейти до молитов">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </a>
+            </section>
+
+            <!-- SECTION 2: DEVOTION TO THE HOLY BLOOD (12-YEAR PRAYER) -->
+            <section id="devotion" class="section-card">
+                <div class="section-header">
+                    <h2 class="section-title">Набожество до Святої Божої Крові</h2>
+                    <div class="section-subtitle">Молитва, яку читають кожного дня 12 років</div>
+                </div>
+
+                <div class="prayer-text">
+                    
+                    <div class="litany-group">
+                        <div class="litany-item"><span class="litany-call">Киріє єлейсон, Христе єлейсон,
+						Киріє єлейсон, Христе єлейсон,
+						Киріє єлейсон, Христе єлейсон.</span></div>
+                        <div class="litany-item"><span class="litany-call">Христе, послухай нас, Христе,<span class="litany-response"> вислухай нас.</span></span></div>
+                        <div class="litany-item"><span class="litany-call">Отче з неба, Боже,</span> <span class="litany-response">помилуй нас.</span></div>
+                        <div class="litany-item"><span class="litany-call">Сину відкупителю світу, Боже,</span> <span class="litany-response">помилуй нас.</span></div>
+                        <div class="litany-item"><span class="litany-call">Духу святий, Боже,</span> <span class="litany-response">помилуй нас.</span></div>
+                        <div class="litany-item"><span class="litany-call">Свята Тройце, Єдиний Боже,</span> <span class="litany-response">помилуй нас.</span></div>
+                        <div class="litany-item"><span class="litany-call">Свята Маріє,</span> <span class="litany-response">молися за нас.</span></div>
+                        <div class="litany-item"><span class="litany-call">Мати Спасителя Страждаючого,</span> <span class="litany-response">молися за нас.</span></div>
+                    </div>
+
+                    <div class="litany-group">
+                        <div class="litany-item"><span class="litany-call">О Найсвятіша Крове Господня, пролита обрізанням,</span> <span class="litany-response">очисти наші гріхи.</span></div>
+                        <div class="litany-item"><span class="litany-call">О Найсвятіша Крове Господня, пролита під час бичування,</span> <span class="litany-response">очисти наші гріхи.</span></div>
+                        <div class="litany-item"><span class="litany-call">О Найсвятіша Крове Господня, пролита під тернем Христа,</span> <span class="litany-response">очисти наші гріхи.</span></div>
+                        <div class="litany-item"><span class="litany-call">О Найсвятіша Крове Господня, пролита на хресній дорозі,</span> <span class="litany-response">очисти наші гріхи.</span></div>
+                        <div class="litany-item"><span class="litany-call">О Найсвятіша Крове Господня, пролита прибиттям Найсвятіших рук до хреста,</span> <span class="litany-response">очисти наші гріхи.</span></div>
+                        <div class="litany-item"><span class="litany-call">О Найсвятіша Крове Господня, пролита прибиттям найсвятіших ніг до хреста,</span> <span class="litany-response">очисти наші гріхи.</span></div>
+                        <div class="litany-item"><span class="litany-call">О Найсвятіша Крове Господня, пролита з Найсвятішого Серця копієм пробитого,</span> <span class="litany-response">очисти наші гріхи.</span></div>
+                        <div class="litany-item"><span class="litany-call">О Найсвятіша Крове Господня, пролита за нас негідних грішників,</span> <span class="litany-response">очисти наші гріхи.</span></div>
+                        <div class="litany-item"><span class="litany-call">О Найсвятіша Крове Господня, пролита до останньої краплі за нас, за наші гріхи,</span> <span class="litany-response">помилуй нас.</span></div>
+                    </div>
+
+                    <div class="litany-group">
+                        <div class="litany-item"><span class="litany-call">О Ісусе, за твою пролиту Найсвятішу Кров за нас на хресті,</span> <span class="litany-response">благодаримо Тебе.</span></div>
+                        <div class="litany-item"><span class="litany-call">О Ісусе, за твою Найсвятішу Кров, зневажену на Голгофі,</span> <span class="litany-response">перепрошуємо Тебе.</span></div>
+                        <div class="litany-item"><span class="litany-call">О Ісусе, за зневаження Найсвятішої Крові на Службі Божій негідним прийманням у Святім Причастію,</span> <span class="litany-response">перепрошуємо Тебе.</span></div>
+                    </div>
+
+                    <div class="litany-group">
+                        <div class="litany-item"><span class="litany-call">Ми, грішні, Тебе Бога просимо,</span> <span class="litany-response">спаси нас Своєю Найсвятішою Кров’ю.</span></div>
+                        <div class="litany-item"><span class="litany-call">Ми, грішні, Тебе Бога просимо,</span> <span class="litany-response">заховай нас Своєю Найсвятішою Кров’ю.</span></div>
+                        <div class="litany-item"><span class="litany-call">Ми, грішні, Тебе Бога просимо,</span> <span class="litany-response">напій нас Своєю Найсвятішою Кров’ю.</span></div>
+                    </div>
+
+                    <div class="litany-group">
+                        <div class="litany-item"><span class="litany-call">Агнче Божий, що нищиш гріхи світу,</span> <span class="litany-response">вислухай нас Господи.</span></div>
+                        <div class="litany-item"><span class="litany-call">Агнче Божий, що нищиш гріхи світу,</span> <span class="litany-response">прости нам Господи.</span></div>
+                        <div class="litany-item"><span class="litany-call">Агнче Божий, що нищиш гріхи світу,</span> <span class="litany-response">помилуй нас Господи.</span></div>
+                    </div>
+
+                    <p style="text-align: center; color: var(--accent-gold); font-weight: 600;">Киріє єлейсон, Христе єлейсон (3 рази)</p>
+                    <p style="text-align: center;">О Найсвятіша Крове Господа нашого Ісуса Христа, будь возвеличена і прославлена всіма нами і тепер, і завжди, і навіки вічні. Амінь.</p>
+
+                    <hr style="border: 0; border-top: 1px solid var(--border-gold); margin: 30px 0;">
+
+                    <p>Всемогучий Боже, наш Спасителю. Ти міг однією краплиною Твоєї Найсвятішої Крові, відкупити мільйони світів. Однак Ти зі Своєї безграничної любові до нас грішників пролляв останню краплю Своєї Найсвятішої Крові, жертвуючи її Богові Отцеві за наші гріхи.</p>
+                    <p>О Ісусе, Ти жертвуєш її щоденно також на престолах цілого світу на кожній Службі Божій. Ти виливаєш Свою Кров під видами вина і жертвуєш за наше відкуплення. Ти пролив її на прокормлення наших душ на вічне життя.</p>
+                    <p>Ми, грішні, падаємо в покорі перед Твоєю величністю і благаємо Тебе, заради Твого безграничного милосердя: помилуй нас грішних. Спасителю, просимо Тебе повернути затверділих грішників, щоб вони навернулися чим скоріше з того страшного стану. Віднови святу віру у всіх народів, щоб повернулися до єдності.</p>
+                    <p>Господи, нашим великим бажанням є, щоби всі люди світу, Тобі служили одному і прославляли Твою Пресвяту Кров.</p>
+                    <p>Боже, змилуйся над душами в чистилищі, бо вони вижидають Твого помилування.</p>
+                    <p>Нехай Твоя Пресвятіша Кров, пролита за наші гріхи, виєднає прощення в Небесного Отця і запровадить їх до вічного щастя. Амінь.</p>
+
+                    <hr style="border: 0; border-top: 1px solid var(--border-gold); margin: 30px 0;">
+
+                    <p>Господи, Ісусе Христе, Спасителю наш, заховай нас від підступів диявольських спокус Своєю Найсвятішою Кров’ю.</p>
+                    <p>Господи, Ісусе Христе, Спасителю наш, поможи нам Своєю Найсвятішою Кров’ю подолати спокуси.</p>
+                    <p>Господи, Ісусе Христе, Спасителю наш, захорони нас і проведи нас за собою ради Твоєї Найсвятішої Крові.</p>
+                    <p>Господи, Ісусе Христе, Спасителю наш, захорони нам від усяких небезпек Святішого Отця зі всім духовенством і Святою Церквою ради Своєї Найсвятішої Крові. Амінь.</p>
+
+                    <div class="instruction-box">
+                        <p style="margin:0; text-indent: 0;"><strong>Молитовне правило:</strong> Отче наш… (7 раз), Богородице Діво… (7 раз), Слава Отцю… (7 раз)</p>
+                        <p style="margin-top:10px; text-indent: 0;">Хто кожного дня протягом 12 років відмовлятиме цю молитву і буде молитися без перерви, то не попаде в чистилище. Хто почав молитися і помер через півроку, отримає ті всі великі ласки: 5 душ з його родини будуть мати покликання до духовного стану і до четвертого покоління з його родини не буде в пеклі. Ця 12-річна молитва має силу очистити душу від усіх беззаконій. Господи Благослови!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: ACT OF PERSONAL CONSECRATION -->
+            <section id="consecration" class="section-card">
+                <div class="section-header">
+                    <h2 class="section-title">Акт особистого посвячення себе Найсвятішій Крові Ісуса Христа</h2>
+                </div>
+
+                <div class="prayer-text">
+                    <p>У повному усвідомленні моєї нікчемності, а заодно Твоєї, о милосердний Спасителю, величі, припадаю до Твоїх стіп і дякую Тобі за так численні докази ласк, котрі Ти мені, невдячному сотворінню виявив, а особливо, що Ти мене через Твою Найсвятішу Кров звільнив від сатанинської сили зіпсуття. В присутності моєї улюбленої Матері Марії, мого Ангела-Хоронителя, моїх святих Покровителів, цілого Небесного Двору посвячуюся, о наймиліший Ісусе, з цілою щирістю серця якнайдобровільніше Твоїй Найдорожчій Крові, через котру Ти цілий світ відкупив від гріха, смерті й пекла.</p>
+
+                    <p>Я, <span id="userNamePlaceholder" class="user-name-highlight">(ім’я)</span>, обіцяю Тобі, надіючись на поміч Твоєї ласки, з усіх моїх сил і згідно моїх можливостей будити і поширювати набоженство до Твоєї Найсвятішої Крові, Ціни нашого Відкуплення, так щоби Твоя Кров, гідна найбільшого почитання, всіма була вшанована і люблена.</p>
+
+                    <p>У такий спосіб хочу мою невірність супроти Твоєї Найдорожчої Крові та Любові винагородити і Тобі задосить учинити за так численні осквернення і зневаги, які люди Твоїй Найдорожчій Ціні нашого спасіння завдають. О! Якби можна було мої власні гріхи, мою остиглість і всі мої зневаги, якими Тебе, Найдорожча Крове, коли-небудь зневажив, вернути в небуття! Дивись, Найдорожчий Ісусе, оце жертвую Тобі також любов, честь, благоговіння, котрі Твоя Пресвята Мати, Твої вірні учні та всі святі Твоїй Найдорожчій Крові віддали. Прошу Тебе, забажай не думати більше про мою попередню невірність і остиглість, а всім, зневажаючим Тебе, забажай усе пробачити. Покропи, о Божий Спасителю, Твоєю Найдорожчою Кров’ю мене, а також усіх людей, щоби ми Тебе, розп’ята Любове, відразу цілим серцем любили і Ціну нашого Відкуплення на всі часи якнайдостойніше почитати могли. Амінь.</p>
+                </div>
+            </section>
+
+            <!-- SECTION 4: PRAYER OF ST. GERTRUDE THE GREAT -->
+            <section id="gertrude" class="section-card">
+                <div class="section-header">
+                    <h2 class="section-title">Молитва св. Ґертруди Великої</h2>
+                    <div class="section-subtitle">Для звільнення душ з Чистилища</div>
+                </div>
+
+                <div class="prayer-text">
+                    <div class="instruction-box" style="text-align: center;">
+                        <p style="margin: 0; text-indent: 0;"><strong>Обітниця Господа Ісуса:</strong> Господь Ісус об’явив св. Ґертруді Великій, що одноразове відмовлення цієї молитви звільняє 1000 (тисячу) душ з Чистилища.</p>
+                    </div>
+
+                    <p style="font-size: 1.4rem; text-align: center; color: var(--accent-gold-bright); line-height: 1.9;">
+                        «Отче Предвічний, жертвую Тобі Найдорогоціннішу Кров Божественного Сина Твого, Господа нашого Ісуса Христа, в злученні з усіма Службами Божими на цілому світі, сьогодні відправленими; за душі, терплячі в чистилищі, за вмираючих, за грішників на світі, за грішників у Вселенській Церкві, за грішників у моїй родині, а також у моєму домі. Амінь.»
+                    </p>
+                    <p style="font-size: 0.95rem; text-align: center; color: var(--text-secondary); text-indent: 0; font-style: italic; margin-top: 15px;">
+                        (500 днів відпусту; III р. в місяці липні; іпрм.)
+                    </p>
+                </div>
+            </section>
+
+            <!-- SECTION 5: ACT OF WORSHIP "GOLDEN ARROW" -->
+            <section id="golden-arrow" class="section-card">
+                <div class="section-header">
+                    <h2 class="section-title">Акт поклоніння «Золота стріла»</h2>
+                </div>
+
+                <div class="prayer-text" style="text-align: center;">
+                    <p style="font-size: 1.35rem; line-height: 2;">
+                        Нехай буде навіки прославлене,<br>
+                        Благословлене, почитаєме,<br>
+                        Обоготворене, найсвятіше,<br>
+                        Найдостойніше, найпрославленіше,<br>
+                        Незбагненне, невимовне Ім’я Боже в Небі,<br>
+                        На землі та пекельних безоднях<br>
+                        Через усі створіння,<br>
+                        Котрі вийшли з рук Божих<br>
+                        І через Найсвятіше Серце<br>
+                        Господа нашого Ісуса Христа<br>
+                        В Найсвятіших Тайнах вівтаря. Амінь.
+                    </p>
+                    <p style="font-size: 0.95rem; color: var(--accent-gold); text-indent: 0; font-style: italic; margin-top: 20px;">
+                        (Цей акт поклоніння належить до братства Найсвятішого Обличчя Ісуса).
+                    </p>
+                </div>
+            </section>
+
+            <!-- SECTION 6: PRAYER TO THE HOLY SHOULDER WOUND OF CHRIST -->
+            <section id="shoulder-wound" class="section-card">
+                <div class="section-header">
+                    <h2 class="section-title">Молитва до св. Рани Рамена Христового</h2>
+                </div>
+
+                <div class="prayer-text">
+                    <p>О наймилостивіший Ісусе, мій Ти найтихіший Агнче Божий! Я, бідний(на) грішник(ця), вітаю і покланяюся цій Рані Твоїй Найсвятішій, котра завдала Тобі надто сильного болю, коли Ти двигав Хрест тяжкий на Своїх Божих Раменах. Цей біль тяжкий, прикріший, ніж інші Рани на Твоїм Святім Тілі. Люблю Тебе, віддаю честь і поклін з глибини серця.</p>
+
+                    <p>Дякую Тобі за Ту найглибшу Рану Твого Рамена. Покірно прошу в ім’я Твоєї муки, яку через Рану Рамена терпів і в ім’я Хреста Твого тяжкого, котрий на тій святій Рані двигав, змилосердися наді мною, негідним(ою) грішником(цею). Прости мені усі гріхи і вчини, аби, ступаючи Твоїми кривавими слідами, осягнув(ла) щасливу вічність. Амінь.</p>
+
+                    <div class="instruction-box" style="text-align: center;">
+                        <p style="margin: 0; text-indent: 0;">Отче наш…(3 рази) | Богородице Діво…(3 рази)</p>
+                        <p style="margin-top: 10px; text-indent: 0; color: var(--accent-gold);">Будь, Господи, благословенний в Найсвятіших Тайнах утаєний. (3 рази)</p>
+                    </div>
+
+                    <p style="text-align: center; color: var(--accent-gold-bright); font-size: 1.3rem; margin-top: 25px;">
+                        Найдорожча Крове, що проливається зі Святої Голови нашого Господа Ісуса Христа, Храму Святої Мудрості і Божої Обителі, знання, Небесного і Земного світла, убережи нас тепер і навіки віків. Амінь.
+                    </p>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p class="footer-gold">О Найсвятіша Крове Господа нашого Ісуса Христа, спаси нас!</p>
+            <p>&copy; Духовне набожество до Пресвятої Крові Христової</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT FOR ANIMATIONS AND INTERACTIVITY -->
+    <script>
+        /* --- DYNAMIC NAME INPUT IN CONSECRATION --- */
+        function updateNameInPrayer() {
+            const inputVal = document.getElementById('userNameInput').value.trim();
+            const placeholder = document.getElementById('userNamePlaceholder');
+            if (inputVal.length > 0) {
+                placeholder.textContent = inputVal;
+            } else {
+                placeholder.textContent = "(ім’я)";
+            }
+        }
+
+        /* --- PRAYER COUNTER WIDGET --- */
+        let currentCount = 0;
+        const maxCount = 7;
+        function updateCounter(change) {
+            currentCount += change;
+            if (currentCount < 0) currentCount = 0;
+            if (currentCount > maxCount) currentCount = maxCount;
+            document.getElementById('prayerCounter').textContent = currentCount + " / " + maxCount;
+        }
+
+        /* --- PRAYER MODE TOGGLE --- */
+        const toggleBtn = document.getElementById('togglePrayerMode');
+        const exitBtn = document.getElementById('exitPrayerMode');
+
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.add('prayer-mode');
+        });
+
+        exitBtn.addEventListener('click', () => {
+            document.body.classList.remove('prayer-mode');
+        });
+
+        /* --- CANVAS ANIMATED BLOOD DROPS EFFECT --- */
+        const canvas = document.getElementById('bloodCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        class BloodDrop {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = -20 - Math.random() * 100;
+                this.length = 10 + Math.random() * 25;
+                this.speed = 0.5 + Math.random() * 1.2;
+                this.radius = 1.5 + Math.random() * 2;
+                this.opacity = 0.3 + Math.random() * 0.5;
+            }
+
+            update() {
+                this.y += this.speed;
+                if (this.y > height + 30) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(139, 0, 0, ${this.opacity})`;
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Draw subtle trailing streak
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(100, 0, 0, ${this.opacity * 0.4})`;
+                ctx.lineWidth = this.radius * 0.8;
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x, this.y - this.length);
+                ctx.stroke();
+            }
+        }
+
+        const dropCount = 45;
+        const drops = [];
+        for (let i = 0; i < dropCount; i++) {
+            drops.push(new BloodDrop());
+        }
+
+        function animateBlood() {
+            ctx.clearRect(0, 0, width, height);
+            drops.forEach(drop => {
+                drop.update();
+                drop.draw();
+            });
+            requestAnimationFrame(animateBlood);
+        }
+
+        animateBlood();
+    </script>
+</body>
+</html>
