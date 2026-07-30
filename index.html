@@ -72,7 +72,6 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-gold);
             z-index: 1000;
-            transition: transform 0.4s ease, opacity 0.4s ease;
         }
 
         .header-container {
@@ -86,7 +85,7 @@
 
         .logo-title {
             font-family: 'Cinzel', serif;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--accent-gold);
             text-decoration: none;
@@ -139,40 +138,11 @@
             width: 100%;
         }
 
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .btn-prayer-mode {
-            background: linear-gradient(135deg, #4a0000, #8b0000);
-            color: var(--accent-gold);
-            border: 1px solid var(--accent-gold);
-            padding: 8px 16px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border-radius: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all var(--transition-speed);
-            box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
-        }
-
-        .btn-prayer-mode:hover {
-            background: linear-gradient(135deg, #8b0000, #a71d2a);
-            color: #ffffff;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
-        }
-
         /* MAIN CONTAINER */
         main {
             position: relative;
             z-index: 10;
-            padding-top: 80px;
+            padding-top: 60px;
         }
 
         .container {
@@ -181,62 +151,75 @@
             padding: 0 20px;
         }
 
-        /* HERO SECTION */
+        /* HERO SECTION (FULL SCREEN ADAPTIVE) */
         .hero-section {
-            min-height: calc(100vh - 80px);
+            min-height: calc(100vh - 60px);
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             text-align: center;
-            padding: 40px 0;
-            position: relative;
+            padding: 15px 0;
+            box-sizing: border-box;
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            flex-grow: 1;
+            justify-content: center;
         }
 
         .hero-title {
             font-family: 'Cinzel', serif;
-            font-size: 2.8rem;
+            font-size: clamp(1.3rem, 3.5vh, 2.5rem);
             color: var(--accent-gold);
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.4), 0 0 35px rgba(139, 0, 0, 0.7);
-            margin-bottom: 15px;
-            line-height: 1.2;
-            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4), 0 0 30px rgba(139, 0, 0, 0.7);
+            margin-bottom: 5px;
+            line-height: 1.25;
+            letter-spacing: 1px;
         }
 
         .hero-subtitle {
-            font-size: 1.4rem;
+            font-size: clamp(0.85rem, 2vh, 1.2rem);
             color: var(--text-secondary);
             font-style: italic;
-            margin-bottom: 35px;
+            margin-bottom: 12px;
             max-width: 800px;
+            line-height: 1.3;
         }
 
         /* CRUCIFIX IMAGE CONTAINER */
         .crucifix-frame {
             position: relative;
-            max-width: 450px;
-            width: 100%;
+            max-height: 58vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             border-radius: 12px;
-            padding: 10px;
+            padding: 6px;
             background: linear-gradient(145deg, rgba(212, 175, 55, 0.3), rgba(139, 0, 0, 0.2));
-            box-shadow: 0 0 35px rgba(139, 0, 0, 0.8), inset 0 0 20px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 0 30px rgba(139, 0, 0, 0.8), inset 0 0 15px rgba(212, 175, 55, 0.2);
             border: 1px solid var(--accent-gold);
-            margin-bottom: 40px;
             animation: haloPulse 4s infinite alternate ease-in-out;
         }
 
         @keyframes haloPulse {
             0% {
-                box-shadow: 0 0 25px rgba(139, 0, 0, 0.7), inset 0 0 15px rgba(212, 175, 55, 0.2);
+                box-shadow: 0 0 20px rgba(139, 0, 0, 0.7), inset 0 0 10px rgba(212, 175, 55, 0.2);
             }
             100% {
-                box-shadow: 0 0 50px rgba(212, 175, 55, 0.5), 0 0 80px rgba(139, 0, 0, 0.9), inset 0 0 25px rgba(212, 175, 55, 0.4);
+                box-shadow: 0 0 40px rgba(212, 175, 55, 0.5), 0 0 60px rgba(139, 0, 0, 0.9), inset 0 0 20px rgba(212, 175, 55, 0.4);
             }
         }
 
         .crucifix-img {
-            width: 100%;
-            height: auto;
+            max-height: calc(58vh - 14px);
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
             border-radius: 8px;
             display: block;
             filter: contrast(1.05) brightness(0.95);
@@ -244,16 +227,16 @@
 
         .scroll-down-btn {
             color: var(--accent-gold);
-            font-size: 2rem;
+            font-size: 1.5rem;
             text-decoration: none;
             animation: bounce 2s infinite;
-            margin-top: 10px;
+            padding: 5px 0;
         }
 
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
+            40% { transform: translateY(-8px); }
+            60% { transform: translateY(-4px); }
         }
 
         /* PRAYER SECTION CARDS */
@@ -265,7 +248,7 @@
             margin: 60px 0;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(139, 0, 0, 0.2);
             position: relative;
-            transition: border-color var(--transition-speed), transform var(--transition-speed);
+            transition: border-color var(--transition-speed);
         }
 
         .section-card:hover {
@@ -364,132 +347,11 @@
             color: var(--accent-gold);
         }
 
-        /* DYNAMIC NAME INPUT FOR CONSECRATION */
-        .name-input-wrapper {
-            background: rgba(10, 3, 4, 0.7);
-            border: 1px solid var(--accent-gold);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .name-input-wrapper label {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.95rem;
-            color: var(--accent-gold);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .name-input {
-            width: 100%;
-            max-width: 400px;
-            background: rgba(20, 5, 7, 0.9);
-            border: 1px solid var(--border-gold);
-            color: var(--accent-gold-bright);
-            padding: 10px 15px;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            text-align: center;
-            border-radius: 5px;
-            outline: none;
-            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
-        }
-
-        .name-input:focus {
-            border-color: var(--accent-gold-bright);
-            box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
-        }
-
         .user-name-highlight {
             color: var(--accent-gold-bright);
             font-weight: 700;
             text-decoration: underline;
             text-underline-offset: 4px;
-        }
-
-        /* ROSARY / PRAYER COUNTER WIDGET */
-        .counter-widget {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin: 25px 0;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 30px;
-            border: 1px solid var(--border-gold);
-        }
-
-        .counter-btn {
-            background: var(--accent-crimson);
-            color: var(--text-primary);
-            border: 1px solid var(--accent-gold);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background var(--transition-speed);
-        }
-
-        .counter-btn:hover {
-            background: var(--accent-blood);
-        }
-
-        .counter-display {
-            font-family: 'Cinzel', serif;
-            font-size: 1.3rem;
-            color: var(--accent-gold);
-            min-width: 120px;
-            text-align: center;
-        }
-
-        /* PRAYER MODE STYLING ADJUSTMENTS */
-        body.prayer-mode header {
-            transform: translateY(-100%);
-            opacity: 0;
-        }
-
-        body.prayer-mode .section-card {
-            background: rgba(10, 3, 4, 0.98);
-            border-color: rgba(212, 175, 55, 0.2);
-            padding: 60px 30px;
-        }
-
-        body.prayer-mode .prayer-text {
-            font-size: 1.5rem;
-            line-height: 2;
-        }
-
-        /* PRAYER MODE EXIT BUTTON */
-        .btn-exit-prayer-mode {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background: var(--accent-gold);
-            color: var(--bg-primary);
-            border: none;
-            padding: 12px 24px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 700;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
-            z-index: 2000;
-            display: none;
-        }
-
-        body.prayer-mode .btn-exit-prayer-mode {
-            display: block;
         }
 
         /* FOOTER */
@@ -516,42 +378,29 @@
         /* RESPONSIVE DESIGN FOR MOBILE & TABLETS */
         @media (max-width: 900px) {
             nav {
-                display: none; /* Сховати додаткову навігацію для чистішого вигляду */
+                display: none;
             }
 
             .header-container {
-                flex-direction: column;
-                gap: 10px;
+                justify-content: center;
                 padding: 10px 15px;
             }
 
             main {
-                padding-top: 100px;
-            }
-
-            .container {
-                padding: 0 12px;
+                padding-top: 50px;
             }
 
             .hero-section {
-                padding: 20px 0;
-                min-height: auto;
-            }
-
-            .hero-title {
-                font-size: 1.75rem;
-                letter-spacing: 1px;
-                margin-bottom: 10px;
-            }
-
-            .hero-subtitle {
-                font-size: 1.05rem;
-                margin-bottom: 25px;
+                min-height: calc(100vh - 50px);
+                padding: 10px 0 5px 0;
             }
 
             .crucifix-frame {
-                max-width: 100%;
-                margin-bottom: 25px;
+                max-height: 52vh;
+            }
+
+            .crucifix-img {
+                max-height: calc(52vh - 12px);
             }
 
             .section-card {
@@ -594,25 +443,6 @@
                 margin-bottom: 8px;
                 font-size: 1.05rem;
             }
-
-            .btn-exit-prayer-mode {
-                bottom: 15px;
-                right: 50%;
-                transform: translateX(50%);
-                width: 90%;
-                max-width: 300px;
-                text-align: center;
-                padding: 10px 16px;
-            }
-
-            body.prayer-mode .section-card {
-                padding: 30px 15px;
-            }
-
-            body.prayer-mode .prayer-text {
-                font-size: 1.25rem;
-                line-height: 1.8;
-            }
         }
     </style>
 </head>
@@ -638,32 +468,23 @@
                     <li><a href="#shoulder-wound">Рана Рамена</a></li>
                 </ul>
             </nav>
-            <div class="nav-actions">
-                <button class="btn-prayer-mode" id="togglePrayerMode">
-                    <i class="fa-solid fa-book-open"></i>
-                    <span>Режим Молитви</span>
-                </button>
-            </div>
         </div>
     </header>
-
-    <button class="btn-exit-prayer-mode" id="exitPrayerMode">
-        <i class="fa-solid fa-xmark"></i> Вийти з Режиму Молитви
-    </button>
 
     <!-- MAIN CONTENT -->
     <main>
         <div class="container">
 
-            <!-- SECTION 1: HERO -->
+            <!-- SECTION 1: HERO (OPTIMIZED TO FIT IN ONE SCREEN) -->
             <section id="hero" class="hero-section">
-                <h1 class="hero-title">Возвеличення Найсвятішої Крови Господа нашого Ісуса Христа</h1>
-                <p class="hero-subtitle">«Ти відкупив нас Господи Своєю Найсвятішою Кров'ю з кожного коліна, і мови, і народу, і племени»</p>
-                
-                <!-- CRUCIFIX IMAGE WITH HALO -->
-                <div class="crucifix-frame">
-                    <img src="Jesus.
-jpeg" alt="Ісус Христос на Хресті — Найсвятіша Кров" class="crucifix-img">
+                <div class="hero-content">
+                    <h1 class="hero-title">Возвеличення Найсвятішої Крови Господа нашого Ісуса Христа</h1>
+                    <p class="hero-subtitle">«Ти відкупив нас Господи Своєю Найсвятішою Кров'ю з кожного коліна, і мови, і народу, і племени»</p>
+                    
+                    <!-- CRUCIFIX IMAGE WITH HALO -->
+                    <div class="crucifix-frame">
+                        <img src="WhatsApp Image 2026-07-30 at 16.00.48.jpeg" alt="Ісус Христос на Хресті — Найсвятіша Кров" class="crucifix-img">
+                    </div>
                 </div>
 
                 <a href="#devotion" class="scroll-down-btn" title="Перейти до молитов">
@@ -844,41 +665,8 @@ jpeg" alt="Ісус Христос на Хресті — Найсвятіша К
         </div>
     </footer>
 
-    <!-- JAVASCRIPT FOR ANIMATIONS AND INTERACTIVITY -->
+    <!-- JAVASCRIPT FOR ANIMATIONS -->
     <script>
-        /* --- DYNAMIC NAME INPUT IN CONSECRATION --- */
-        function updateNameInPrayer() {
-            const inputVal = document.getElementById('userNameInput').value.trim();
-            const placeholder = document.getElementById('userNamePlaceholder');
-            if (inputVal.length > 0) {
-                placeholder.textContent = inputVal;
-            } else {
-                placeholder.textContent = "(ім’я)";
-            }
-        }
-
-        /* --- PRAYER COUNTER WIDGET --- */
-        let currentCount = 0;
-        const maxCount = 7;
-        function updateCounter(change) {
-            currentCount += change;
-            if (currentCount < 0) currentCount = 0;
-            if (currentCount > maxCount) currentCount = maxCount;
-            document.getElementById('prayerCounter').textContent = currentCount + " / " + maxCount;
-        }
-
-        /* --- PRAYER MODE TOGGLE --- */
-        const toggleBtn = document.getElementById('togglePrayerMode');
-        const exitBtn = document.getElementById('exitPrayerMode');
-
-        toggleBtn.addEventListener('click', () => {
-            document.body.classList.add('prayer-mode');
-        });
-
-        exitBtn.addEventListener('click', () => {
-            document.body.classList.remove('prayer-mode');
-        });
-
         /* --- CANVAS ANIMATED BLOOD DROPS EFFECT --- */
         const canvas = document.getElementById('bloodCanvas');
         const ctx = canvas.getContext('2d');
@@ -918,7 +706,6 @@ jpeg" alt="Ісус Христос на Хресті — Найсвятіша К
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Draw subtle trailing streak
                 ctx.beginPath();
                 ctx.strokeStyle = `rgba(100, 0, 0, ${this.opacity * 0.4})`;
                 ctx.lineWidth = this.radius * 0.8;
